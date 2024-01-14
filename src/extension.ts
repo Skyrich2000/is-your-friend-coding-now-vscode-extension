@@ -23,6 +23,7 @@ export function activate(context: vscode.ExtensionContext) {
     const globalTimer = context.globalState.get("interval", undefined);
 
     if (!globalTimer) {
+      setStatusBar();
       const timer = setInterval(async () => {
         vscode.window.showInformationMessage("pulling...");
         await setStatusBar();
