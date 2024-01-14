@@ -1,42 +1,12 @@
-import axios from "axios";
 import * as vscode from "vscode";
-
-const host = "http://skyrich3.iptime.org:8003/users/coding";
-
-const getUser = async () => {
-  const { data } = await axios.get(host);
-
-  console.log("getUser", data);
-  return data.join(", ");
-};
-
-const createUser = async (name: string) => {
-  const { data } = await axios.post(host, {
-    user: name,
-  });
-
-  console.log("createUser", data);
-  return data;
-};
-
-const deleteUser = async (name: string) => {
-  const { data } = await axios.request({
-    method: "delete",
-    url: host,
-    data: {
-      user: name,
-    },
-  });
-
-  console.log("deleteUser", data);
-  return data;
-};
+import { getUser, createUser, deleteUser } from "./api";
 
 export function activate(context: vscode.ExtensionContext) {
   const statusBarItem = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right,
     1
   );
+  vscode.window.showInformationMessage("active");
 
   const setStatusBar = async () => {
     const result = await getUser();
@@ -45,7 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
     statusBarItem.show();
   };
 
-  let disposable = vscode.commands.registerCommand(
+  const disposable = vscode.commands.registerCommand(
     "is-your-friend-coding-now.start",
     async () => {
       const user = await vscode.window.showInputBox({
@@ -57,9 +27,16 @@ export function activate(context: vscode.ExtensionContext) {
       }
 
       vscode.window.showInformationMessage(`User Name: ${user}`);
-      await createUser(user);
 
-      // if user is focused on vscode
+      await createUser(user);
+      await setStatusBar();
+
+      /**
+       * @description
+       * VScode focus event
+       * When the vscode window is focused, the user is added to the list.
+       * When the vscode window is not focused, the user is deleted from the list.
+       */
       vscode.window.onDidChangeWindowState(async (e) => {
         if (e.focused) {
           await createUser(user);
@@ -68,8 +45,6 @@ export function activate(context: vscode.ExtensionContext) {
         }
         await setStatusBar();
       });
-
-      await setStatusBar();
     }
   );
 
