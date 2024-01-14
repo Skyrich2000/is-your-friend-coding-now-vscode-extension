@@ -14,6 +14,40 @@ export function activate(context: vscode.ExtensionContext) {
     statusBarItem.show();
   };
 
+  /**
+   * @description
+   * if interval is already running, do not run it again.
+   * if interval is not running, run it.
+   */
+  const pulling = () => {
+    const globalTimer = context.globalState.get("interval", undefined);
+
+    if (!globalTimer) {
+      const timer = setInterval(async () => {
+        vscode.window.showInformationMessage("pulling...");
+        await setStatusBar();
+      }, 1500);
+      context.globalState.update("interval", timer);
+    } else {
+      vscode.window.showInformationMessage("Already pulling...");
+    }
+  };
+
+  pulling();
+
+  vscode.window.onDidChangeWindowState(async (e) => {
+    if (e.focused) {
+      pulling();
+    } else {
+      vscode.window.showInformationMessage("Clearing interval...");
+      const globalTimer = context.globalState.get("interval", undefined);
+      if (globalTimer) {
+        clearInterval(globalTimer);
+        context.globalState.update("interval", undefined);
+      }
+    }
+  });
+
   const disposable = vscode.commands.registerCommand(
     "is-your-friend-coding-now.start",
     async () => {
