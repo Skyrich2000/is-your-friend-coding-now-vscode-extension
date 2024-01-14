@@ -76,7 +76,6 @@ export function activate(context: vscode.ExtensionContext) {
         } else {
           await deleteUser(user);
         }
-        await setStatusBar();
       });
     }
   );
