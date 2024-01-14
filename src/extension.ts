@@ -6,7 +6,6 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.StatusBarAlignment.Right,
     1
   );
-  vscode.window.showInformationMessage("active");
 
   const setStatusBar = async () => {
     const result = await getUser();
