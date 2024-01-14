@@ -33,8 +33,6 @@ export function activate(context: vscode.ExtensionContext) {
     }
   };
 
-  pulling();
-
   vscode.window.onDidChangeWindowState(async (e) => {
     if (e.focused) {
       pulling();
@@ -62,7 +60,8 @@ export function activate(context: vscode.ExtensionContext) {
       vscode.window.showInformationMessage(`User Name: ${user}`);
 
       await createUser(user);
-      await setStatusBar();
+
+      pulling();
 
       /**
        * @description
