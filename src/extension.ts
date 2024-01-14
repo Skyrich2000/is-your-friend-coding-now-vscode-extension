@@ -84,4 +84,12 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(disposable);
 }
 
-export function deactivate() {}
+export function deactivate() {
+  const globalTimer = vscode.workspace
+    .getConfiguration()
+    .get("is-your-friend-coding-now.interval", undefined);
+
+  if (globalTimer) {
+    clearInterval(globalTimer);
+  }
+}
