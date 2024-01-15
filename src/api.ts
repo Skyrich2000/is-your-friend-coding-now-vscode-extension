@@ -5,7 +5,7 @@ const HOST = "http://skyrich3.iptime.org:8003/users/coding";
 const getUser = async () => {
   const { data } = await axios.get(HOST);
 
-  return data.join(", ");
+  return data.join(",");
 };
 
 const createUser = async (user: string) => {
@@ -13,7 +13,7 @@ const createUser = async (user: string) => {
     user,
   });
 
-  return data.join(", ");
+  return data.join(",");
 };
 
 const deleteUser = async (user: string) => {
@@ -25,7 +25,7 @@ const deleteUser = async (user: string) => {
     },
   });
 
-  return data.join(", ");
+  return data.join(",");
 };
 
 export { getUser, createUser, deleteUser };
