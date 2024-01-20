@@ -1,7 +1,11 @@
 import * as vscode from "vscode";
 import { getUser, createUser, deleteUser } from "./api";
+import { Credentials } from "./credentials";
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
+  const credentials = new Credentials();
+  await credentials.initialize(context);
+
   const statusBarItem = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right,
     1
@@ -50,9 +54,23 @@ export function activate(context: vscode.ExtensionContext) {
   const disposable = vscode.commands.registerCommand(
     "is-your-friend-coding-now.start",
     async () => {
-      const user = await vscode.window.showInputBox({
-        title: "ENTER YOUR NAME",
-      });
+      /**
+       * Octokit (https://github.com/octokit/rest.js#readme) is a library for making REST API
+       * calls to GitHub. It provides convenient typings that can be helpful for using the API.
+       *
+       * Documentation on GitHub's REST API can be found here: https://docs.github.com/en/rest
+       */
+      const octokit = await credentials.getOctokit();
+      const userInfo = await octokit.users.getAuthenticated();
+
+      console.log(userInfo);
+      console.log(userInfo.data.login);
+
+      vscode.window.showInformationMessage(
+        `Logged into GitHub as ${userInfo.data.login}`
+      );
+      // github user name 바꾸고 싶다!!
+      const user = userInfo.data.login;
       if (!user) {
         vscode.window.showInformationMessage("Not a valid name");
         return;
