@@ -1,7 +1,8 @@
 {
   "name": "is-your-friend-coding-now",
   "displayName": "is-your-friend-coding-now",
-  "description": "is-your-friend-coding-now",
+  "description": "Share your coding status with your friends",
+  "publisher": "Amollang",
   "version": "0.0.1",
   "license": "MIT",
   "repository": {
@@ -14,6 +15,7 @@
   "categories": [
     "Other"
   ],
+  "icon": "images/iyfcn-logo.png",
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
